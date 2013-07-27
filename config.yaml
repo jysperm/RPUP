@@ -1,0 +1,5 @@
+﻿name: rpup
+version: 1
+handle:
+  - rewrite: if(path !~ "^index.php$") goto "index.php"
+  - directoryindex: index.php
