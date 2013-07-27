@@ -17,6 +17,7 @@ $SaeStorageDomain = "rpup";
 $NonSaeFilesDir = ROOT . "/files";
 
 ob_start();
+define("InSAE", defined("SAE_ACCESSKEY"));
 
 if(class_exists("SaeStorage"))
 {
@@ -76,7 +77,7 @@ switch($_SERVER["REQUEST_METHOD"])
       {
           $fileMD5 = $r[1];
 
-          if(SAE_ACCESSKEY)
+          if(InSAE)
               $files = $ss->getList($SaeStorageDomain, $fileMD5);
           else
               $files = glob("{$NonSaeFilesDir}/{$fileMD5}*");
@@ -92,7 +93,7 @@ switch($_SERVER["REQUEST_METHOD"])
           else
           {
               $file = $files[0];
-              if(SAE_ACCESSKEY)
+              if(InSAE)
                   $fileName = substr($file, 32);
               else
                   $fileName = substr($file, 32 + strlen($NonSaeFilesDir) + 1);
@@ -101,7 +102,7 @@ switch($_SERVER["REQUEST_METHOD"])
               header("Content-Type: application/force-download");
               header("Content-Disposition: attachment; filename={$fileName}");
 
-              if(SAE_ACCESSKEY)
+              if(InSAE)
                   echo $ss->read($SaeStorageDomain, $file);
               else
                   readfile($file);
@@ -129,13 +130,13 @@ switch($_SERVER["REQUEST_METHOD"])
                   $fileURL = "http://{$_SERVER["SERVER_NAME"]}/{$fileMD5}";
                   $fileURL = "<a href='{$fileURL}' target='_blank'>{$fileURL}</a>";
 
-                  if(SAE_ACCESSKEY)
+                  if(InSAE)
                       $files = $ss->getList($SaeStorageDomain, $fileMD5);
                   else
                       $files = glob("{$NonSaeFilesDir}/{$fileMD5}*");
 
                   if(!$files)
-                      if(SAE_ACCESSKEY)
+                      if(InSAE)
                           file_put_contents("saestor://{$SaeStorageDomain}/{$objName}", file_get_contents($tmpName));
                       else
                           move_uploaded_file($tmpName, "{$NonSaeFilesDir}/{$objName}");
@@ -197,11 +198,11 @@ $htmlOut = ob_get_clean();
             <ul style="list-style-type:none;">
               <li>作者 <a href="http://jyprince.me/" target="_brank">精英王子</a>(<i class="icon-envelope"></i>m@jybox.net)</li>
               <li>源代码托管于 <a href="https://github.com/jybox/RPUP" target="_brank">Github/RPUP</a> GPLv3</li>
-              <?php if(SAE_ACCESSKEY):?>
+              <?php if(InSAE):?>
                 <li><a href="http://sae.sina.com.cn" target="_blank"><img src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif" title="Powered by Sina App Engine"></a></li>
               <?php endif;?>
               <li><i class="icon-random"></i> <script src="//static2.jybox.net/my-website/analyzer.js" type="text/javascript"></script></li>
-              <?php if(SAE_ACCESSKEY):?>
+              <?php if(InSAE):?>
                 <li>已用：<?php echo ceil($serverInfo["diskUsed"] / 1024 / 1024);?>MiB, 共<?php echo $serverInfo["fileNum"];?>个文件</li>
               <?php else:?>
                 <li>可用空间：<?php echo ceil($serverInfo["diskFree"] / 1024 / 1024);?> MiB</li>
