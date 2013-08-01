@@ -19,7 +19,7 @@ $NonSaeFilesDir = ROOT . "/files";
 ob_start();
 define("InSAE", defined("SAE_ACCESSKEY"));
 
-if(class_exists("SaeStorage"))
+if(InSAE)
 {
     $ss = new SaeStorage();
     $serverInfo["diskUsed"] = $ss->getDomainCapacity($SaeStorageDomain);
