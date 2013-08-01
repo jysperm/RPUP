@@ -1,8 +1,6 @@
 ## RPUP
 
-A simple online drive with single page.
-
-一个只有单个页面的简单网盘。
+一个只有单个页面的简单文件分享应用。
 
 ## 运行环境
 
